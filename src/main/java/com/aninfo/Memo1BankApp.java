@@ -2,6 +2,9 @@ package com.aninfo;
 
 import com.aninfo.model.Account;
 import com.aninfo.service.AccountService;
+import com.aninfo.service.TransactionService;
+import com.aninfo.model.Transaction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +21,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @SpringBootApplication
@@ -26,6 +31,7 @@ public class Memo1BankApp {
 
 	@Autowired
 	private AccountService accountService;
+	private TransactionService transactionService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Memo1BankApp.class, args);
@@ -67,13 +73,28 @@ public class Memo1BankApp {
 
 	@PutMapping("/accounts/{cbu}/withdraw")
 	public Account withdraw(@PathVariable Long cbu, @RequestParam Double sum) {
-		return accountService.withdraw(cbu, sum);
+		Account acc = accountService.withdraw(cbu, sum);
+		transactionService.addWithdraw(cbu, sum);
+		return acc;
 	}
 
 	@PutMapping("/accounts/{cbu}/deposit")
 	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
-		return accountService.deposit(cbu, sum);
+		Account acc = accountService.deposit(cbu, sum);
+		transactionService.addDeposit(cbu, sum);
+		return acc;
 	}
+	/* 
+	@PutMapping("/accounts/{cbu}/deposit")
+	public Account depositWithPromo(@PathVariable Long cbu, @RequestParam Double sum) {
+		if (sum >= PROMO_MIN_DEPOSIT) {
+			double bonus = sum * PROMO_PERCENTAGE;
+			sum = (bonus > PROMO_MAX_GAIN) ? sum + PROMO_MAX_GAIN : sum + bonus;
+		}
+		Account acc = accountService.deposit(cbu, sum);
+		transactionService.addDeposit(cbu, sum);
+		return acc;
+	}*/
 
 	@Bean
 	public Docket apiDocket() {
@@ -83,4 +104,25 @@ public class Memo1BankApp {
 			.paths(PathSelectors.any())
 			.build();
 	}
+
+	@GetMapping("/{id}")
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+        Transaction transaction = transactionService.findTransactionById(id);
+        if (transaction != null) {
+            return ResponseEntity.ok(transaction);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/account/{accountId}")
+    public List<Transaction> getTransactionsByAccount(@PathVariable Long accountId) {
+        return transactionService.findTransactionsByAccountId(accountId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id) {
+        transactionService.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
+    }
 }
