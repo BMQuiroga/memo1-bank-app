@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
     
-    Optional<Transaction> findById(Long id);
+    Optional<Transaction> findByTransactionId(Long id);
 
     List<Transaction> findAllByCbu(Long cbu);
 
-    void deleteById(Long id);
+    void deleteByTransactionId(Long id);
 
     Transaction save(Transaction transaction);
 }

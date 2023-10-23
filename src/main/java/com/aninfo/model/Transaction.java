@@ -9,24 +9,28 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long transactionId;
     
-    private Long id;
+    private Long cbu;
     private TransactionType transactionType;
-    private double amount;
+    private Double amount;
 
-    public Transaction(Long accountId, TransactionType transactionType, double amount) {
-        this.id = accountId;
+    public Transaction(Long accountId, TransactionType transactionType, Double amount) {
+        this.cbu = accountId;
         this.transactionType = transactionType;
         this.amount = amount;
+    }
+
+    public Transaction() {
+        
     }
 
     // Getters and setters for the fields
 
     public Long getAccountId() {
-        return id;
+        return cbu;
     }
 
     public void setAccountId(Long accountId) {
-        this.id = accountId;
+        this.cbu = accountId;
     }
 
     public Long getTransactionId() {
@@ -45,11 +49,11 @@ public class Transaction {
         this.transactionType = transactionType;
     }
 
-    public double getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 }

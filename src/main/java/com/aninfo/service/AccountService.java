@@ -1,5 +1,6 @@
 package com.aninfo.service;
 
+import com.aninfo.model.Constants;
 import com.aninfo.exceptions.DepositNegativeSumException;
 import com.aninfo.exceptions.InsufficientFundsException;
 import com.aninfo.model.Account;
@@ -13,10 +14,6 @@ import java.util.Optional;
 
 @Service
 public class AccountService {
-
-    public static final int PROMO_MAX_GAIN = 500;
-	public static final int PROMO_MIN_DEPOSIT = 2000;
-	public static final double PROMO_PERCENTAGE = 0.1;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -62,9 +59,9 @@ public class AccountService {
             throw new DepositNegativeSumException("Cannot deposit negative sums");
         }
 
-        if (sum >= PROMO_MIN_DEPOSIT) {
-			double bonus = sum * PROMO_PERCENTAGE;
-			sum = (bonus > PROMO_MAX_GAIN) ? sum + PROMO_MAX_GAIN : sum + bonus;
+        if (sum >= Constants.PROMO_MIN_DEPOSIT) {
+			Double bonus = sum * Constants.PROMO_PERCENTAGE;
+			sum = (bonus > Constants.PROMO_MAX_GAIN) ? sum + Constants.PROMO_MAX_GAIN : sum + bonus;
 		}
 
         Account account = accountRepository.findAccountByCbu(cbu);

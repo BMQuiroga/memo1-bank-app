@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.transaction.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -31,6 +32,8 @@ public class Memo1BankApp {
 
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
 	private TransactionService transactionService;
 
 	public static void main(String[] args) {
@@ -96,6 +99,28 @@ public class Memo1BankApp {
 		return acc;
 	}*/
 
+	@GetMapping("/transactions/{transactionId}")
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long transactionId) {
+        Transaction transaction = transactionService.findTransactionById(transactionId);
+        if (transaction != null) {
+            return ResponseEntity.ok(transaction);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/accounts/{cbu}/transactions")
+    public List<Transaction> getTransactionsByAccount(@PathVariable Long cbu) {
+        return transactionService.findTransactionsByAccountId(cbu);
+    }
+
+	@Transactional
+    @DeleteMapping("/transactions/{transactionId}")
+    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long transactionId) {
+        transactionService.deleteTransaction(transactionId);
+        return ResponseEntity.noContent().build();
+    }
+
 	@Bean
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.SWAGGER_2)
@@ -105,24 +130,5 @@ public class Memo1BankApp {
 			.build();
 	}
 
-	@GetMapping("/{id}")
-    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
-        Transaction transaction = transactionService.findTransactionById(id);
-        if (transaction != null) {
-            return ResponseEntity.ok(transaction);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/account/{accountId}")
-    public List<Transaction> getTransactionsByAccount(@PathVariable Long accountId) {
-        return transactionService.findTransactionsByAccountId(accountId);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id) {
-        transactionService.deleteTransaction(id);
-        return ResponseEntity.noContent().build();
-    }
+	
 }
