@@ -36,6 +36,21 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+/*
+task cucumberTest(type: Test) {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    // Specify the location of your feature files
+    include 'src/test/resources/cucumber/bank_account_operations.feature'
+	include 'src/test/resources/cucumber/tests2.feature'
+    // Specify the location of your step definition files
+    testRuntimeClasspath += files('src/test/java/com/aninfo/integration/cucumber/CucumberTest.class')
+}*/
+/*
+cucumber {
+    // Configure the location of your feature files and step definitions
+    featureLocation = 'src/test/resources/cucumber'
+    glue = 'com.aninfo.integration.cucumber' // Replace with your package name
+}*/
 
 //testToolchain {
 //    java '11'
