@@ -16,15 +16,15 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public Transaction findTransactionById(Long id) {
+    public Transaction findById(Long id) {
         return transactionRepository.findByTransactionId(id).orElse(null);
     }
 
-    public List<Transaction> findTransactionsByAccountId(Long accountId) {
+    public List<Transaction> findByCbu(Long accountId) {
         return transactionRepository.findAllByCbu(accountId);
     }
     
-    public void deleteTransaction(Long id) {
+    public void deleteById(Long id) {
         transactionRepository.deleteByTransactionId(id);
     }
 

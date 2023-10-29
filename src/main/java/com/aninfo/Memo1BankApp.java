@@ -101,7 +101,7 @@ public class Memo1BankApp {
 
 	@GetMapping("/transactions/{transactionId}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable Long transactionId) {
-        Transaction transaction = transactionService.findTransactionById(transactionId);
+        Transaction transaction = transactionService.findById(transactionId);
         if (transaction != null) {
             return ResponseEntity.ok(transaction);
         } else {
@@ -110,15 +110,15 @@ public class Memo1BankApp {
     }
 
     @GetMapping("/accounts/{cbu}/transactions")
-    public List<Transaction> getTransactionsByAccount(@PathVariable Long cbu) {
-        return transactionService.findTransactionsByAccountId(cbu);
+    public List<Transaction> getTransactionsByCbu(@PathVariable Long cbu) {
+        return transactionService.findByCbu(cbu);
     }
 
 	@Transactional
     @DeleteMapping("/transactions/{transactionId}")
-    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long transactionId) {
-        transactionService.deleteTransaction(transactionId);
-        return ResponseEntity.noContent().build();
+    public void deleteTransactionById(@PathVariable Long transactionId) {
+        transactionService.deleteById(transactionId);
+        //return ResponseEntity.noContent().build();
     }
 
 	@Bean
